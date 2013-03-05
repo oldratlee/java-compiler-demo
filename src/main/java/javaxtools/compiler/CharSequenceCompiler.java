@@ -2,11 +2,14 @@ package javaxtools.compiler;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,6 +26,7 @@ import javax.tools.JavaCompiler;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
+import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -97,7 +101,7 @@ public class CharSequenceCompiler<T> {
       }
       classLoader = new ClassLoaderImpl(loader);
       diagnostics = new DiagnosticCollector<JavaFileObject>();
-      final JavaFileManager fileManager = compiler.getStandardFileManager(diagnostics,
+      final StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics,
             null, null);
       // create our FileManager which chains to the default file manager
       // and our ClassLoader
@@ -107,6 +111,22 @@ public class CharSequenceCompiler<T> {
          for (String option : options) {
             this.options.add(option);
          }
+      }
+
+      if (loader instanceof URLClassLoader && (!loader.getClass().getName().equals("sun.misc.Launcher$AppClassLoader"))) {
+          try {
+              URLClassLoader urlClassLoader = (URLClassLoader) loader;
+
+              List<File> path = new ArrayList<File>();
+              for (URL url : urlClassLoader.getURLs()) {
+                  File file = new File(url.getFile());
+                  path.add(file);
+              }
+
+              fileManager.setLocation(StandardLocation.CLASS_PATH, path);
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
       }
    }
 
