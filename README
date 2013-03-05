@@ -1,0 +1,61 @@
+This ZIP archive contains the source code and compiled code for the javaxtools.compiler
+package and sample Plotter Swing application. This code accompanies the developerWorks article 
+"Create dynamic applications with javax.tools" http://www.ibm.com/developerworks/java/j-jcomp/
+by David J. Biesack.
+
+ZIP archive file content directories:
+
+  src    - the Java source code for the javaxtools.compiler API and the Plotter sample application
+  target - generated jar and compiled classes
+  docs   - documentation. The Javadoc for both javaxtools.compiler and the example Plotter Swing
+           application is in the api subdirectory.
+
+To run the sample:
+
+1) Create a directory such as ~/javaxtools.compiler or c:\javaxtools.compiler
+The instructions below will use c:\javaxtools.compiler as an example
+
+2) Unpack the ZIP file to c:\javaxtools.compiler
+
+3) Download JFreeChart from http://www.jfree.org/jfreechart/
+   You need two jars from the JFreeChart distribution:
+
+  jfreechart-1.0.6.jar or a later compatible version from SourceForge
+  project download page at 
+  http://sourceforge.net/project/showfiles.php?group_id=15494
+  
+  The JFreeChart distribution also includes a required a jcommon-1.0.10.jar
+  
+  JFreeChart is distributed under the GNU Lesser Public License but is
+  not included in this developerWorks distribution.
+
+4) Extract the JFreeChart jars from the JFreeChart distribution and copy
+   the jars to c:\javaxtools.compiler\target . Rename the JFreeChart
+   jars by removing the explicit version number from the file name
+   (i.e. rename jfreechart-1.0.6.jar as jfreechart.jar and rename
+   jcommon-1.0.10.jar as jcommon.jar). This allows easy replacement
+   of the JFreeChart implementation with later releases without
+   having to change the Class-Path: attribute in the
+   javaxtools.compiler.jar manifest.
+   
+   You should now have three jars in that directory:
+
+   c:\javaxtools.compiler\target\javaxtools.compiler.jar
+   c:\javaxtools.compiler\target\jfreechart.jar
+   c:\javaxtools.compiler\target\jcommon.jar
+   
+5) Change to the c:\javaxtools.compiler\target directory and execute the jar file
+
+   java -jar javaxtools.compiler.jar
+  
+   or double click the jar file if you have a file association for executable jar files.
+
+   If the application does not run, ensure that tools.jar from the the JDK is in the
+   CLASSPATH. This is automatically in the CLASSPATH if you run java from
+   the JDK distribution; i.e. on windows
+
+    c:\path-to-your-installed-java6-jdk\bin\java -jar javaxtools.compiler.jar
+  
+   Note that tools.jar is not in the CLASSPATH if you run java from a JRE
+   distribution (which includes c:\windows\system32\java.exe if you
+   ran a JRE installer for Microsoft Windows operating systems). 
