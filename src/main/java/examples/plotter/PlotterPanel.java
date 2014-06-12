@@ -72,8 +72,6 @@ final public class PlotterPanel extends JPanel {
     // the Java source template
     private String template;
 
-    // The compiled function which runs f(x)
-    private Function function;
     // GUI drawing panel
     private final PlotPanel plotPanel = new PlotPanel();
     // scrollable error view
@@ -141,7 +139,8 @@ final public class PlotterPanel extends JPanel {
      */
     void generateAndPlotFunction() {
         final String source = plotFunctionText.getText();
-        function = newFunction(source);
+        // The compiled function which runs f(x)
+        Function function = newFunction(source);
         final XYSeries series = new XYSeries(source);
         for (int i = -100; i <= 100; i++) {
             double x = i / 10.0;
@@ -246,10 +245,9 @@ final public class PlotterPanel extends JPanel {
         if (template == null)
             template = readTemplate();
         // simplest "template processor":
-        String source = template.replace("$packageName", packageName)//
+        return template.replace("$packageName", packageName)//
                 .replace("$className", className)//
                 .replace("$expression", expression);
-        return source;
     }
 
     /**

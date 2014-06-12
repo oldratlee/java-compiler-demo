@@ -211,7 +211,7 @@ public class CharSequenceCompiler<T> {
         final CompilationTask task = compiler.getTask(null, javaFileManager, diagnostics,
                 options, null, sources);
         final Boolean result = task.call();
-        if (result == null || !result.booleanValue()) {
+        if (result == null || !result) {
             throw new CharSequenceCompilerException("Compilation failed.", classes
                     .keySet(), diagnostics);
         }
@@ -546,8 +546,7 @@ final class ClassLoaderImpl extends ClassLoader {
         // Workaround for "feature" in Java 6
         // see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6434149
         try {
-            Class<?> c = Class.forName(qualifiedClassName);
-            return c;
+            return Class.forName(qualifiedClassName);
         } catch (ClassNotFoundException nf) {
             // Ignore and fall through
         }

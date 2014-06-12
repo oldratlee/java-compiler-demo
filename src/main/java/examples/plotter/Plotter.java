@@ -20,8 +20,6 @@ final public class Plotter extends JFrame {
 
     /**
      * Display the plot GUI and allow user interaction.
-     *
-     * @param args
      */
     public static void main(final String[] args) {
         try {
