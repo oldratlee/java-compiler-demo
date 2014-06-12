@@ -8,5 +8,5 @@ how to run
 -------------------
 
 ```bash
-mvn install exec:java -Dexec.mainClass=javaxtools.compiler.examples.plotter.Plotter
+mvn install exec:java -Dexec.mainClass=examples.plotter.Plotter
 ```

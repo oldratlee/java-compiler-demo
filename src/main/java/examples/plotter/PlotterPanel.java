@@ -2,7 +2,7 @@
 // Author: David J. Biesack David.Biesack@sas.com
 // Created on Nov 4, 2007
 
-package javaxtools.compiler.examples.plotter;
+package examples.plotter;
 
 import static javax.swing.SpringLayout.EAST;
 import static javax.swing.SpringLayout.NORTH;
@@ -20,7 +20,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
@@ -72,11 +72,11 @@ final public class PlotterPanel extends JPanel {
    // compiler
    // options (the generated source in this example is Java 1.5 compatible.)
    private final CharSequenceCompiler<Function> compiler = new CharSequenceCompiler<Function>(
-         getClass().getClassLoader(), Arrays.asList(new String[] { "-target", "1.5" }));
+         getClass().getClassLoader(), new ArrayList<String>());
    // for unique class names
    private int classNameSuffix = 0;
    // package name; a random number is appended
-   private static final String PACKAGE_NAME = "javaxtools.compiler.examples.plotter.runtime";
+   private static final String PACKAGE_NAME = "examples.plotter.runtime";
    // for secure package name
    private static final Random random = new Random();
    // the Java source template
@@ -216,17 +216,20 @@ final public class PlotterPanel extends JPanel {
          final String source = fillTemplate(packageName, className, expr);
          // compile the generated Java source
          final DiagnosticCollector<JavaFileObject> errs = new DiagnosticCollector<JavaFileObject>();
-         Class<Function> compiledFunction = compiler.compile(qName, source, errs,
-               new Class<?>[] { Function.class });
+         Class<Function> compiledFunction = compiler.compile(qName, source, errs, Function.class);
          log(errs);
          return compiledFunction.newInstance();
       } catch (CharSequenceCompilerException e) {
+         e.printStackTrace();
          log(e.getDiagnostics());
       } catch (InstantiationException e) {
+         e.printStackTrace();
          errors.setText(e.getMessage());
       } catch (IllegalAccessException e) {
+         e.printStackTrace();
          errors.setText(e.getMessage());
       } catch (IOException e) {
+         e.printStackTrace();
          errors.setText(e.getMessage());
       }
       return NULL_FUNCTION;

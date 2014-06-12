@@ -2,7 +2,7 @@
 // Author: David J. Biesack David.Biesack@sas.com
 // Created on Nov 4, 2007
 
-package javaxtools.compiler.examples.plotter;
+package examples.plotter;
 
 /**
  * This interface represents a simply mathematical function {@code y = f(x)}

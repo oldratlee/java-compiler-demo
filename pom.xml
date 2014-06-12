@@ -9,10 +9,6 @@
 	<name>jcompiler</name>
 	<packaging>jar</packaging>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
 	<build>
 		<resources>
 			<resource>
@@ -32,8 +28,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<encoding>UTF-8</encoding>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.5</source>
+					<target>1.5</target>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -49,20 +45,11 @@
 				</file>
 			</activation>
 			<properties>
-				<toolsjar>${java.home}/../lib/tools.jar</toolsjar>
+				<java_tools_jar>${java.home}/../lib/tools.jar</java_tools_jar>
 			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>com.sun</groupId>
-					<artifactId>tools</artifactId>
-					<version>1.6.0</version>
-					<scope>system</scope>
-					<systemPath>${toolsjar}</systemPath>
-				</dependency>
-			</dependencies>
 		</profile>
 		<profile>
-			<id>mac-profile</id>
+			<id>mac-jdk-profile</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 				<file>
@@ -70,7 +57,7 @@
 				</file>
 			</activation>
 			<properties>
-				<toolsjar>${java.home}/../Classes/classes.jar</toolsjar>
+				<java_tools_jar>${java.home}/../Classes/classes.jar</java_tools_jar>
 			</properties>
 		</profile>
 	</profiles>
@@ -83,9 +70,9 @@
 		<dependency>
 			<groupId>com.sun</groupId>
 			<artifactId>tools</artifactId>
-			<version>1.6.0</version>
+			<version>${java.version}</version>
 			<scope>system</scope>
-			<systemPath>${toolsjar}</systemPath>
+			<systemPath>${java_tools_jar}</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
