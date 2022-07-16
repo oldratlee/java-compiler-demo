@@ -12,13 +12,13 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -30,6 +30,7 @@ import javax.tools.JavaFileObject;
 import javaxtools.compiler.CharSequenceCompiler;
 import javaxtools.compiler.CharSequenceCompilerException;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.swing.SpringLayout.EAST;
 import static javax.swing.SpringLayout.NORTH;
 import static javax.swing.SpringLayout.SOUTH;
@@ -61,8 +62,8 @@ final public class PlotterPanel extends JPanel {
     // The -target 1.5 options are simply an example of how to pass javac
     // compiler
     // options (the generated source in this example is Java 1.5 compatible.)
-    private final CharSequenceCompiler<Function> compiler = new CharSequenceCompiler<Function>(
-            getClass().getClassLoader(), new ArrayList<String>());
+    private final CharSequenceCompiler<Function> compiler = new CharSequenceCompiler<>(
+            getClass().getClassLoader(), new ArrayList<>());
     // for unique class names
     private int classNameSuffix = 0;
     // package name; a random number is appended
@@ -96,11 +97,7 @@ final public class PlotterPanel extends JPanel {
         c.add(label);
         c.add(plotFunctionText);
         c.add(plotButton);
-        ActionListener plot = new ActionListener() {
-            public void actionPerformed(ActionEvent action) {
-                generateAndPlotFunction();
-            }
-        };
+        ActionListener plot = action -> generateAndPlotFunction();
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent evt) {
@@ -202,22 +199,18 @@ final public class PlotterPanel extends JPanel {
             // generate the source class as String
             final String source = fillTemplate(packageName, className, expr);
             // compile the generated Java source
-            final DiagnosticCollector<JavaFileObject> errs = new DiagnosticCollector<JavaFileObject>();
+            final DiagnosticCollector<JavaFileObject> errs = new DiagnosticCollector<>();
             Class<Function> compiledFunction = compiler.compile(qName, source, errs, Function.class);
             log(errs);
-            return compiledFunction.newInstance();
+            return compiledFunction.getConstructor().newInstance();
         } catch (CharSequenceCompilerException e) {
             e.printStackTrace();
             log(e.getDiagnostics());
-        } catch (InstantiationException e) {
+        } catch (InstantiationException | NoSuchMethodException | IllegalAccessException | IOException e) {
             e.printStackTrace();
             errors.setText(e.getMessage());
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            errors.setText(e.getMessage());
-        } catch (IOException e) {
-            e.printStackTrace();
-            errors.setText(e.getMessage());
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
         return NULL_FUNCTION;
     }
@@ -257,12 +250,16 @@ final public class PlotterPanel extends JPanel {
      * @throws IOException
      */
     private String readTemplate() throws IOException {
-        InputStream is = PlotterPanel.class.getResourceAsStream("Function.java.template");
-        int size = is.available();
-        byte bytes[] = new byte[size];
-        if (size != is.read(bytes, 0, size))
-            throw new IOException();
-        return new String(bytes, "US-ASCII");
+        try (InputStream is = PlotterPanel.class.getResourceAsStream("Function.java.template")) {
+            if (is == null) {
+                throw new IOException("template not found!");
+            }
+            int size = is.available();
+            byte[] bytes = new byte[size];
+            if (size != is.read(bytes, 0, size))
+                throw new IOException();
+            return new String(bytes, UTF_8);
+        }
     }
 
     /**
@@ -284,10 +281,6 @@ final public class PlotterPanel extends JPanel {
      * Null Object pattern to use when there are exceptions with the function
      * expression.
      */
-    static final Function NULL_FUNCTION = new Function() {
-        public double f(final double x) {
-            return 0.0;
-        }
-    };
+    static final Function NULL_FUNCTION = x -> 0.0;
 
 }

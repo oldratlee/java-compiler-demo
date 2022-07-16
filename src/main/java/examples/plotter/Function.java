@@ -8,6 +8,7 @@ package examples.plotter;
  * This interface represents a simply mathematical function {@code y = f(x)}
  * that maps double to doubles.
  */
+@FunctionalInterface
 public interface Function {
     /**
      * Compute a value {@code y=f(x)} of an dependent variable y from an

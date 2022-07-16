@@ -8,8 +8,8 @@ import javax.swing.*;
 
 /**
  * This is a Swing application which demonstrates the use of
- * javax.tools.Compiler via the Facade class,
- * javaxtools.compiler.CharSequenceCompiler. See {@link PlotterPanel} for more
+ * {@code javax.tools.Compiler} via the Facade class,
+ * {@code javaxtools.compiler.CharSequenceCompiler}. See {@link PlotterPanel} for more
  * information.
  *
  * @author <a href="mailto:David.Biesack@sas.com">David J. Biesack</a>

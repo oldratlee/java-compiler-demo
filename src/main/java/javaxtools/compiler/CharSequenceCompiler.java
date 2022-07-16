@@ -97,13 +97,13 @@ public class CharSequenceCompiler<T> {
                     + "Check that your class path includes tools.jar");
         }
         classLoader = new ClassLoaderImpl(loader);
-        diagnostics = new DiagnosticCollector<JavaFileObject>();
+        diagnostics = new DiagnosticCollector<>();
         final StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics,
                 null, null);
         // create our FileManager which chains to the default file manager
         // and our ClassLoader
         javaFileManager = new FileManagerImpl(fileManager, classLoader);
-        this.options = new ArrayList<String>();
+        this.options = new ArrayList<>();
         if (options != null) { // make a save copy of input options
             for (String option : options) {
                 this.options.add(option);
@@ -114,7 +114,7 @@ public class CharSequenceCompiler<T> {
             try {
                 URLClassLoader urlClassLoader = (URLClassLoader) loader;
 
-                List<File> path = new ArrayList<File>();
+                List<File> path = new ArrayList<>();
                 for (URL url : urlClassLoader.getURLs()) {
                     File file = new File(url.getFile());
                     path.add(file);
@@ -156,8 +156,8 @@ public class CharSequenceCompiler<T> {
         if (diagnosticsList != null)
             diagnostics = diagnosticsList;
         else
-            diagnostics = new DiagnosticCollector<JavaFileObject>();
-        Map<String, CharSequence> classes = new HashMap<String, CharSequence>(1);
+            diagnostics = new DiagnosticCollector<>();
+        Map<String, CharSequence> classes = new HashMap<>(1);
         classes.put(qualifiedClassName, javaSource);
         Map<String, Class<T>> compiled = compile(classes, diagnosticsList);
         Class<T> newClass = compiled.get(qualifiedClassName);
@@ -187,7 +187,7 @@ public class CharSequenceCompiler<T> {
             final Map<String, CharSequence> classes,
             final DiagnosticCollector<JavaFileObject> diagnosticsList)
             throws CharSequenceCompilerException {
-        List<JavaFileObject> sources = new ArrayList<JavaFileObject>();
+        List<JavaFileObject> sources = new ArrayList<>();
         for (Entry<String, CharSequence> entry : classes.entrySet()) {
             String qualifiedClassName = entry.getKey();
             CharSequence javaSource = entry.getValue();
@@ -218,17 +218,13 @@ public class CharSequenceCompiler<T> {
         try {
             // For each class name in the inpput map, get its compiled
             // class and put it in the output map
-            Map<String, Class<T>> compiled = new HashMap<String, Class<T>>();
+            Map<String, Class<T>> compiled = new HashMap<>();
             for (String qualifiedClassName : classes.keySet()) {
                 final Class<T> newClass = loadClass(qualifiedClassName);
                 compiled.put(qualifiedClassName, newClass);
             }
             return compiled;
-        } catch (ClassNotFoundException e) {
-            throw new CharSequenceCompilerException(classes.keySet(), e, diagnostics);
-        } catch (IllegalArgumentException e) {
-            throw new CharSequenceCompilerException(classes.keySet(), e, diagnostics);
-        } catch (SecurityException e) {
+        } catch (ClassNotFoundException | IllegalArgumentException | SecurityException e) {
             throw new CharSequenceCompilerException(classes.keySet(), e, diagnostics);
         }
     }
@@ -302,7 +298,7 @@ final class FileManagerImpl extends ForwardingJavaFileManager<JavaFileManager> {
     private final ClassLoaderImpl classLoader;
 
     // Internal map of filename URIs to JavaFileObjects.
-    private final Map<URI, JavaFileObject> fileObjects = new HashMap<URI, JavaFileObject>();
+    private final Map<URI, JavaFileObject> fileObjects = new HashMap<>();
 
     /**
      * Construct a new FileManager which forwards to the <var>fileManager</var>
@@ -377,7 +373,7 @@ final class FileManagerImpl extends ForwardingJavaFileManager<JavaFileManager> {
      */
     @Override
     public JavaFileObject getJavaFileForOutput(Location location, String qualifiedName,
-                                               Kind kind, FileObject outputFile) throws IOException {
+                                               Kind kind, FileObject outputFile) {
         JavaFileObject file = new JavaFileObjectImpl(qualifiedName, kind);
         classLoader.add(qualifiedName, file);
         return file;
@@ -405,7 +401,7 @@ final class FileManagerImpl extends ForwardingJavaFileManager<JavaFileManager> {
                                          Set<Kind> kinds, boolean recurse) throws IOException {
         Iterable<JavaFileObject> result = super.list(location, packageName, kinds,
                 recurse);
-        ArrayList<JavaFileObject> files = new ArrayList<JavaFileObject>();
+        ArrayList<JavaFileObject> files = new ArrayList<>();
         if (location == StandardLocation.CLASS_PATH
                 && kinds.contains(JavaFileObject.Kind.CLASS)) {
             for (JavaFileObject file : fileObjects.values()) {
@@ -521,14 +517,14 @@ final class JavaFileObjectImpl extends SimpleJavaFileObject {
  * A custom ClassLoader which maps class names to JavaFileObjectImpl instances.
  */
 final class ClassLoaderImpl extends ClassLoader {
-    private final Map<String, JavaFileObject> classes = new HashMap<String, JavaFileObject>();
+    private final Map<String, JavaFileObject> classes = new HashMap<>();
 
     ClassLoaderImpl(final ClassLoader parentClassLoader) {
         super(parentClassLoader);
     }
 
     /**
-     * @return An collection of JavaFileObject instances for the classes in the
+     * @return A collection of JavaFileObject instances for the classes in the
      * class loader.
      */
     Collection<JavaFileObject> files() {
