@@ -1,4 +1,4 @@
-# java compiler demo [![Github Workflow Build Status](https://img.shields.io/github/workflow/status/oldratlee/java-compiler-demo/CI/master?logo=github&logoColor=white)](https://github.com/oldratlee/java-compiler-demo/actions/workflows/ci.yaml) [![Java support](https://img.shields.io/badge/Java-8+-green?logo=OpenJDK&logoColor=white)](https://openjdk.java.net/)
+# java compiler demo [![Github Workflow Build Status](https://img.shields.io/github/actions/workflow/status/oldratlee/java-compiler-demo/ci.yaml?branch=master&logo=github&logoColor=white)](https://github.com/oldratlee/java-compiler-demo/actions/workflows/ci.yaml) [![Java support](https://img.shields.io/badge/Java-8+-green?logo=OpenJDK&logoColor=white)](https://openjdk.java.net/)
 
 Creating dynamic applications with java compiler(`javax.tools.JavaCompiler`).
 
